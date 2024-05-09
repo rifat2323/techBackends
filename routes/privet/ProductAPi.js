@@ -5,7 +5,8 @@ const Product = require('../../models/detalisProduct.js')
 const coludanary =  require('cloudinary').v2
 const multer  =require('multer')
 const path  =require('path')
-const  fs = require('fs')
+const  fs = require('fs/promises')
+const Picture = require('../../models/Picture.js')
 
  coludanary.config({
    cloud_name: process.env.CloudName, 
@@ -47,6 +48,7 @@ router.post('/product',async (req,res)=>{
    res.status(200).json(newProduct)
  }catch(error){
     console.log(error)
+    return res.status(500).send("server error")
  }
 
 
@@ -72,19 +74,112 @@ router.post('/pictures',upload.fields([
 }
 
 ]),async (req,res)=>{
+ const {color1,color2,color3,color4,id} = req.body;
+ 
 
-    if(req.files.color1){
-      req.files.color1.map( async (item,index)=>{
-         try{
-            const result = await coludanary.uploader.upload(item.path,{folder:"tech"})
-            return res.status(200).json(result)
-         }catch(error){
-            console.log(error)
-         }
+   try{
      
-      })
-    }
-   res.status(200)
+      let wholeArray = []
+      
+      if(req.files.color1){
+
+         const picture1 = await Promise.all( req.files.color1.map( async (item,index)=>{
+            try{
+               const result = await coludanary.uploader.upload(item.path,{folder:"tech"})
+                   
+                    
+                   
+                await fs.unlink(item.path)
+                return result.url
+            }catch(error){
+               console.log(error)
+            }
+        
+         }))
+         let tempObej ={
+            color:color1,
+            image:picture1
+         }
+         wholeArray.push(tempObej)
+       }
+      if(req.files.color2){
+
+        const picture2 = await Promise.all( req.files.color2.map( async (item,index)=>{
+            try{
+               const result = await coludanary.uploader.upload(item.path,{folder:"tech"})
+                   
+                    
+                   
+                await fs.unlink(item.path)
+                return result.url
+               
+            }catch(error){
+               console.log(error)
+            }
+           
+         }))
+         let tempObej ={
+            color:color2,
+            image:picture2
+         }
+         wholeArray.push(tempObej)
+       }
+      if(req.files.color3){
+
+        const picture3 =await Promise.all( req.files.color3.map( async (item,index)=>{
+            try{
+               const result = await coludanary.uploader.upload(item.path,{folder:"tech"})
+                 
+                      
+                await fs.unlink(item.path)
+                return result.url
+               
+            }catch(error){
+               console.log(error)
+            }
+        
+         }))
+         let tempObej ={
+            color:color3,
+            image:picture3
+         }
+         wholeArray.push(tempObej)
+       }
+      if(req.files.color4){
+
+        const picture4 = await Promise.all( req.files.color4.map( async (item,index)=>{
+            try{
+               const result = await coludanary.uploader.upload(item.path,{folder:"tech"})
+                   
+                    
+                      
+                await fs.unlink(item.path)
+                return result.url
+               
+            }catch(error){
+               console.log(error)
+            }
+        
+         }))
+         let tempObej ={
+            color:color4,
+            image:picture4
+         }
+         wholeArray.push(tempObej)
+       }
+
+    
+   
+    
+   
+      const newResult  =  await Picture.create({Pictures:wholeArray,id:id})
+      if(!newResult) return res.status(404).send("no picture uploaded")
+      res.status(200).json(newResult)
+   }catch(error){
+      console.error("error" + error)
+      return res.status(500).send('server error')
+   }
+  
 })
 
 
