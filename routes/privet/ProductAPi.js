@@ -7,6 +7,7 @@ const multer  =require('multer')
 const path  =require('path')
 const  fs = require('fs/promises')
 const Picture = require('../../models/Picture.js')
+const FilterOption = require('../../models/FilterOption.js')
 
  coludanary.config({
    cloud_name: process.env.CloudName, 
@@ -182,6 +183,20 @@ router.post('/pictures',upload.fields([
   
 })
 
-
+router.post("/filter",async (req,res)=>{
+   const {title,checkBoxValue,category} = req.body
+   if(!title,!checkBoxValue){
+      return res.status(404).send("nothing here")
+   }
+try{
+   const newFilter =  await FilterOption.create({title:title,checkBoxValue:checkBoxValue,category:category})
+   if(!newFilter) return res.status(404).send("nothing here")
+      res.status(200).json(newFilter)
+   
+}catch(error){
+   console.error("error" + error)
+   return res.status(500).send('server error')
+}
+})
 
 module.exports = router

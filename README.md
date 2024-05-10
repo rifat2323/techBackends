@@ -23,5 +23,5 @@ You can start editing the page by modifying `index.js`.
 routes have all the necessary code for each end point. it have privet for only admin also have public for public access.
 ## models
 this have all the necessary code for mongoose models
-##multer
+## multer
 here you can find not the best practice but over all good examples of multer use

@@ -19,14 +19,15 @@ const sort = new mongoose.Schema({
     type:String,
     required:true
    },
-   discount:String,
+   discount:Number,
    brand:{
     type:String
    },
    screenSize:String,
    memory:String,
    battery:String,
-   megapixel:String
+   megapixel:String,
+   category:String
    
 
 })
