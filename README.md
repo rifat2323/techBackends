@@ -27,13 +27,14 @@ this have all the necessary code for mongoose models
 here you can find not the best practice but over all good examples of multer use
 
 ## joi
-joi is a validator . so simply what is does just validate what type of your query,params,body etc . here is a example so you can understand more. install joi by npm i joi
+joi is a validator . so simply what is does just validate what type of your query,params,body etc . here is a example so you can understand more.  install joi by npm i joi
 go there website to learn more about joi [joi](https://joi.dev/)
 1. create a schema 
+```javascript
  const first = Joi.object({
     category:Joi.string()
   })
-  2. validate on your function or api endpoint
+  function or api endpoint
   router.get('/filter/:category', async (req,res) =>{
     const category = req.params.category;
     if(!category) return res.statusCode(404)
@@ -52,7 +53,7 @@ go there website to learn more about joi [joi](https://joi.dev/)
         return res.status(500).send("server error: " + error)
     }
 })
-
+```
 ## sanitize-html
 sanitize-html is a power full library  fro xss attack simple what is does just remove any unwanted link,script or other sql statements from your request
 
@@ -63,6 +64,7 @@ let dart = <img src=x />
  const clean = sanitizer(dart) //output will be either nothing or <img/>
 
 2. api end point example 
+```javascript
 router.get('/search/:name', async(req,res)=>{
       const name = req.params.name
       const sort = parseInt(req.query.setPrice)
