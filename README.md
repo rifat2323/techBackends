@@ -27,13 +27,14 @@ this have all the necessary code for mongoose models
 here you can find not the best practice but over all good examples of multer use
 
 ## joi
-joi is a validator . so simply what is does just validate what type of your query,params,body etc . here is a example so you can understand more. install joi by npm i joi
+joi is a validator . so simply what is does just validate what type of your query,params,body etc . here is a example so you can understand more.  install joi by npm i joi
 go there website to learn more about joi [joi](https://joi.dev/)
 1. create a schema 
+```javascript
  const first = Joi.object({
     category:Joi.string()
   })
-  2. validate on your function or api endpoint
+  function or api endpoint
   router.get('/filter/:category', async (req,res) =>{
     const category = req.params.category;
     if(!category) return res.statusCode(404)
