@@ -15,6 +15,7 @@ app.use(cors({
     credentials:true
 }))
 app.use(cookieParser())
+
 connectDB()
 
 app.get('/',async (req,res)=>{
