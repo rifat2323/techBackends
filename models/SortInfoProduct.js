@@ -8,7 +8,7 @@ const sort = new mongoose.Schema({
     required:true
    },
    price:{
-    type:String || Number ,
+    type: Number ,
     required:true
    },
    productName:{
@@ -30,7 +30,7 @@ const sort = new mongoose.Schema({
    category:String
    
 
-})
+},{timestamps:true})
 
 const ShortProduct = mongoose.model('ShortProduct',sort)
 

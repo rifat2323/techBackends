@@ -52,7 +52,7 @@ router.post('/product/:category', async (req,res) =>{
     const skip =  (page -1)*limit;
      
    const body =    req.body  || {};
-  
+    console.log(category)
 
      const findes = Object.assign(body,{category:category})
      if(!category) return res.statusCode(404)
@@ -182,4 +182,14 @@ router.get('/search/:name', async(req,res)=>{
 
 })
 
+router.get('/discount', async (req,res)=>{
+    try{
+      const discount = await ShortProduct.find({discount:{$gte:50}}).limit(20)
+      if(!discount) return res.status(404).send("no discount found")
+         res.status(200).json(discount)
+    }catch(error){
+        console.log(error)
+        res.status(500).send("file error" + error)
+    }
+})
 module.exports = router

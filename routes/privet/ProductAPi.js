@@ -39,10 +39,11 @@ router.post('/shortProduct',async (req,res)=>{
 })
 
 router.post('/product',async (req,res)=>{
-    const {productName,price,color,discountPrice,variant,highlight,hintInfo,brif,description,additional,id} = req.body
-
+   
+    const {productName,price,color,discountPrice,variant,highlight,hintInfo,brif,description,additional,id,uniqId} = req.body.newObj
+ 
  try{
-   const newProduct = await Product.create({productName,price,color,discountPrice,variant,highlight,hintInfo,brif,description,additional,id})
+   const newProduct = await Product.create({productName,price,color,discountPrice,variant,highlight,hintInfo,brif,description,additional,id,uniqId})
    if(!newProduct) {
       return res.status(404).send("can't post the product something wrong")
    }
@@ -56,7 +57,7 @@ router.post('/product',async (req,res)=>{
 })
 
 
-router.post('/pictures',upload.fields([
+router.post('/pictures/:uniqId',upload.fields([
 {
    name:"color1",
    maxCount:4
@@ -75,9 +76,12 @@ router.post('/pictures',upload.fields([
 }
 
 ]),async (req,res)=>{
- const {color1,color2,color3,color4,id} = req.body;
- 
-
+  
+const uniqId = req.params.uniqId;
+if(!uniqId) return res.status(404).send("no unique id found")
+  const findProduct = await  Product.findOne({uniqId:uniqId})
+if(!findProduct) return res.status(404).send("no uniq id found")
+  const colors = findProduct.color
    try{
      
       let wholeArray = []
@@ -98,7 +102,7 @@ router.post('/pictures',upload.fields([
         
          }))
          let tempObej ={
-            color:color1,
+            color:colors[0],
             image:picture1
          }
          wholeArray.push(tempObej)
@@ -120,7 +124,7 @@ router.post('/pictures',upload.fields([
            
          }))
          let tempObej ={
-            color:color2,
+            color:colors[1],
             image:picture2
          }
          wholeArray.push(tempObej)
@@ -141,7 +145,7 @@ router.post('/pictures',upload.fields([
         
          }))
          let tempObej ={
-            color:color3,
+            color:colors[2],
             image:picture3
          }
          wholeArray.push(tempObej)
@@ -163,7 +167,7 @@ router.post('/pictures',upload.fields([
         
          }))
          let tempObej ={
-            color:color4,
+            color:colors[3],
             image:picture4
          }
          wholeArray.push(tempObej)
@@ -173,7 +177,7 @@ router.post('/pictures',upload.fields([
    
     
    
-      const newResult  =  await Picture.create({Pictures:wholeArray,id:id})
+      const newResult  =  await Picture.create({Pictures:wholeArray,id:findProduct.id})
       if(!newResult) return res.status(404).send("no picture uploaded")
       res.status(200).json(newResult)
    }catch(error){

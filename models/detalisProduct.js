@@ -51,9 +51,17 @@ const details = new mongoose.Schema({
     id:{
         type:String,
         required:true
-    }
-
-})
+    },
+    uniqId:{
+        required:true,
+        type:String,
+       
+    },
+   time:{
+    type:Number,
+    default:Date.now()
+   }
+},{timestamps:true})
 
 const Product = mongoose.model('Product',details)
 module.exports = Product

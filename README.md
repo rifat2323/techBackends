@@ -53,7 +53,7 @@ go there website to learn more about joi [joi](https://joi.dev/)
         return res.status(500).send("server error: " + error)
     }
 })
-
+```
 ## sanitize-html
 sanitize-html is a power full library  fro xss attack simple what is does just remove any unwanted link,script or other sql statements from your request
 
@@ -64,6 +64,7 @@ let dart = <img src=x />
  const clean = sanitizer(dart) //output will be either nothing or <img/>
 
 2. api end point example 
+```javascript
 router.get('/search/:name', async(req,res)=>{
       const name = req.params.name
       const sort = parseInt(req.query.setPrice)
