@@ -7,7 +7,7 @@ const app = express()
 const mongoose = require('mongoose')
 const connectDB = require('./db/connectDb.js')
  const {CronJob} = require('cron')
- const fetch = require('node-fetch');
+ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
