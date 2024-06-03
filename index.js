@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 const connectDB = require('./db/connectDb.js')
  const {CronJob} = require('cron')
  const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -32,6 +33,7 @@ app.use('/',require('./routes/public/productInfo.js'))
 app.use('/', require('./routes/privet/Cart.js'))
 app.use('/admin',require('./routes/privet/admin/allEndPoint.js'))
 app.use('/adminpost', require('./routes/privet/admin/ShorDetails.js'))
+app.use("/adminshow", require('./routes/privet/admin/Charts.js'))
 new CronJob(
     '*/30 * * * * *',
     async function () {
