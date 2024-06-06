@@ -83,6 +83,35 @@ coludanary.config({
 
 
  })
+ router.post('/shortdetailse/computers', upload.single('image'),async (req,res)=>{
+    const {ssd,ram,processor,id,discount} = JSON.parse(req.body.sortObj) 
+    if(!ssd,!ram,!processor|| !id) return res.status(404).send('all status need')
+    const img = req.file.path
+   
+   
+   const findProduct = await Product.findOne({uniqId:id})
+   if(!findProduct) return res.status(404).send("no product found")
+ try{
+
+  const result = await coludanary.uploader.upload(img, {
+    resource_type:"image",
+    folder:"tech"
+  })
+  await fs.unlink(img)
+ 
+  const newObj = await ShortDetails.create({
+    ssd:ssd,ram:ram,processor:processor,image:result.url,price:findProduct.discountPrice,productName:findProduct.productName,id:findProduct.id,category:"computers",discount:discount
+  })
+ 
+ res.status(200).json(newObj)
+
+ }catch(error){
+    console.log(error)
+    return res.status(500).send("server error" + error)
+ }
+
+
+ })
 
 
  module.exports = router

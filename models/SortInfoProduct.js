@@ -27,7 +27,14 @@ const sort = new mongoose.Schema({
    memory:String,
    battery:String,
    megapixel:String,
-   category:String
+   category:String,
+   ram:String,
+   ssd:String,
+   processor:String,
+   totalSold:{
+      type:Number,
+      default:0
+   }
    
 
 },{timestamps:true})

@@ -8,7 +8,15 @@ const mongoose = require('mongoose')
 const connectDB = require('./db/connectDb.js')
  const {CronJob} = require('cron')
  const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const helmet = require('helmet')
+const {rateLimit} = require('express-rate-limit')
 
+const limiter  = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+	legacyHeaders: false,
+})
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -22,7 +30,8 @@ app.use(cors({
 
 
 connectDB()
-
+app.use(limiter)
+app.use(helmet())
 app.get('/',async (req,res)=>{
     console.log("hello")
     res.status(200).send("okk hello there bro im not down")
@@ -50,6 +59,8 @@ new CronJob(
     'utc'
 
 )
+
+
 mongoose.connection.on("open",()=>{
        console.log('connected to database')
     app.listen(8000,()=>{
