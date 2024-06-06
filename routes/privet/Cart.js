@@ -219,6 +219,14 @@ router.get('/orderhistoryuser',validateUser, async (req,res)=>{
          deliveryStatus:"paid"
        })
        foundUser.productIdes = []
+      for(const product of foundUser.productIdes){
+        const shortProduct = await ShortProduct.findById(product.productId)
+        if(shortProduct){
+          shortProduct.totalSold =  shortProduct.totalSold + product.productCount
+          await shortProduct.save()
+        }
+
+      }
         await foundUser.save()
      console.log(newOrderTrack)
    }

@@ -6,6 +6,7 @@ const FilterOption = require('../../models/FilterOption.js')
 const Picture = require('../../models/Picture.js')
 const Joi = require('joi')
 const sanitizer = require('sanitize-html');
+const { emit } = require('process');
 
 
 const router = express.Router()
@@ -23,7 +24,10 @@ const router = express.Router()
      brand:Joi.string().optional() || Joi.array().max(5).optional(),
      screenSize:Joi.string().optional() || Joi.array().max(5).optional(),
      battery:Joi.string().optional() || Joi.array().max(5).optional(),
-     memory:Joi.string().optional() || Joi.array().max(5).optional()
+     memory:Joi.string().optional() || Joi.array().max(5).optional(),
+    ssd:Joi.string().optional() || Joi.array().max(3).optional(),
+    ram:Joi.string().optional() || Joi.array().max(3).optional(),
+    processor:Joi.string().optional() || Joi.array().max(3).optional()
   })
 router.get('/filter/:category', async (req,res) =>{
     const category = req.params.category;
@@ -52,18 +56,21 @@ router.post('/product/:category', async (req,res) =>{
     const skip =  (page -1)*limit;
      
    const body =    req.body  || {};
-    console.log(category)
+    
 
      const findes = Object.assign(body,{category:category})
      if(!category) return res.statusCode(404)
+    
         
-       const {erro,value} = second.validate({category:category,setPrice:sortQuery,page:page})
+     const {erro,value} = second.validate({category:category,setPrice:sortQuery,page:page})
        const {error,valu} = third.validate(findes)
       
      
        if(error || !value){
+        console.log(error)
         return res.sendStatus(408)
-       }
+       
+       } 
        
       
     try{
@@ -190,6 +197,36 @@ router.get('/discount', async (req,res)=>{
     }catch(error){
         console.log(error)
         res.status(500).send("file error" + error)
+    }
+})
+router.get('/newarrive', async (req,res)=>{
+    try{
+      const newProduct = await ShortProduct.find().limit(20).sort({createAt:1})
+      if(!newProduct) return res.status(404).send("no product found")
+      res.status(200).json(newProduct)
+    }catch(e){
+        console.log(e)
+       return res.status(500).send("file error" + emit)
+    }
+})
+router.get('/featureproduct', async (req,res)=>{
+    try{
+      const newProduct = await ShortProduct.find().limit(20)
+      if(!newProduct) return res.status(404).send("no product found")
+      res.status(200).json(newProduct)
+    }catch(e){
+        console.log(e)
+       return res.status(500).send("file error" + e)
+    }
+})
+router.get('/mostsold', async (req,res)=>{
+    try{
+      const newProduct = await ShortProduct.find().limit(20).sort({totalSold:1})
+      if(!newProduct) return res.status(404).send("no product found")
+      res.status(200).json(newProduct)
+    }catch(e){
+        console.log(e)
+       return res.status(500).send("file error" + e)
     }
 })
 module.exports = router
