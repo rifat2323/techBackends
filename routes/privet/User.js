@@ -77,8 +77,8 @@ if(error) return res.status(405).send("validated fail")
        }, process.env.refresh_token,{expiresIn:'1d'})
        findUser.refreshToken = refreshToken
        await findUser.save()
-        res.cookie("access_token",accessToken,{maxAge:60*60*1000,httpOnly:true,secure:true})
-        res.cookie("refresh_token",refreshToken,{maxAge:60*60*1000,httpOnly:true,secure:true })
+        res.cookie("access_token",accessToken,{maxAge:60*60*1000,httpOnly:true,secure:true,sameSite:"none"})
+        res.cookie("refresh_token",refreshToken,{maxAge:60*60*1000,httpOnly:true,secure:true,sameSite:"none"})
         res.status(200).send({authorized:true})
        
      }catch(error){
