@@ -50,7 +50,7 @@ new CronJob(
             const response = await fetch('https://techbackends.onrender.com/');
             const text = await response.text();
             const response2 = await fetch('https://techfrontends.onrender.com/category/mobile?page=1');
-            const text2 = await response.text();
+            const text2 = await response2.text();
             console.log('Pinged server:', text + text2);
         } catch (error) {
             console.error('Error pinging server:', error);
