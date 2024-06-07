@@ -23,7 +23,7 @@ app.use(express.urlencoded({extended:true}))
 
 
 app.use(cors({
-    origin: ['https://techfrontends.onrender.com','http://localhost:5173'],
+    origin: ['https://techfrontends.onrender.com','http://localhost:5173','http://localhost:3000'],
     credentials:true
     
 }))
@@ -49,7 +49,9 @@ new CronJob(
         try {
             const response = await fetch('https://techbackends.onrender.com/');
             const text = await response.text();
-            console.log('Pinged server:', text);
+            const response2 = await fetch('https://techfrontends.onrender.com/category/mobile?page=1');
+            const text2 = await response.text();
+            console.log('Pinged server:', text + text2);
         } catch (error) {
             console.error('Error pinging server:', error);
         }
