@@ -44,7 +44,7 @@ app.use('/admin',require('./routes/privet/admin/allEndPoint.js'))
 app.use('/adminpost', require('./routes/privet/admin/ShorDetails.js'))
 app.use("/adminshow", require('./routes/privet/admin/Charts.js'))
 new CronJob(
-    '*/30 * * * * *',
+    '*/60 * * * * *',
     async function () {
         try {
             const response = await fetch('https://techbackends.onrender.com/');
