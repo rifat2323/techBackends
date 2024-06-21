@@ -23,7 +23,7 @@ app.use(express.urlencoded({extended:true}))
 
 
 app.use(cors({
-    origin: ['https://techfrontends.onrender.com','http://localhost:5173','http://localhost:3000'],
+    origin: ['https://techfrontend.onrender.com','http://localhost:5173','http://localhost:3000'],
     credentials:true
     
 }))
