@@ -7,7 +7,7 @@ const Picture = require('../../models/Picture.js')
 const Joi = require('joi')
 const sanitizer = require('sanitize-html');
 const { emit } = require('process');
-
+const Review = require('../../models/review.js')
 
 const router = express.Router()
 
@@ -229,4 +229,17 @@ router.get('/mostsold', async (req,res)=>{
        return res.status(500).send("file error" + e)
     }
 })
+
+router.get('/review/:productId', async(req,res)=>{
+    const productId = req.params.productId
+ try{
+  const findReview = await Review.find({productId:productId}).populate('userId','userName img _id').limit(10)
+  if(!findReview) return res.status(404).send("no review found")
+  res.status(200).json(findReview)
+
+ }catch(error){
+    return res.status(500).send("server error" + error)
+ }
+})
+
 module.exports = router
