@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const validateUser =  async (req,res,next)=>{
     const access_token = req.headers.access_token
     const refresh_token = req.headers.refresh_token
-    
+      console.log( `refresh token ${refresh_token}`)
     
     const refreshToken = sanitize(refresh_token)
     const accessToken = sanitize(access_token)

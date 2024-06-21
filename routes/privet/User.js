@@ -8,7 +8,7 @@ const joi = require('joi');
 const validateUser = require('../../middleware/Uservalidate.js')
 const WishList = require('../../models/wishList.js')
 const ShortProduct = require('../../models/SortInfoProduct.js') 
-
+const Review = require('../../models/review.js')
 
 const reg = joi.object({
     userName: joi.string(),
@@ -77,8 +77,8 @@ if(error) return res.status(405).send("validated fail")
        }, process.env.refresh_token,{expiresIn:'1d'})
        findUser.refreshToken = refreshToken
        await findUser.save()
-        res.cookie("access_token",accessToken,{maxAge:60*60*1000,httpOnly:true,secure:true,sameSite:"none"})
-        res.cookie("refresh_token",refreshToken,{maxAge:60*60*1000,httpOnly:true,secure:true,sameSite:"none"})
+        res.cookie("access_token",accessToken,{maxAge:60*60*1000,httpOnly:true,secure:false,sameSite:"lax"})
+        res.cookie("refresh_token",refreshToken,{maxAge:60*60*1000,httpOnly:true,secure:false,sameSite:"lax"})
         res.status(200).send({authorized:true})
        
      }catch(error){
@@ -108,8 +108,8 @@ router.post('/withgoogle', async (req,res)=>{
                      }, process.env.refresh_token,{expiresIn:"1d"})
                      findUser.refreshToken = refreshToken
                      await findUser.save()
-                      res.cookie("access_token",accessToken,{maxAge: 60*60*60*1000, httpOnly:true,secure:true,sameSite:"none"})
-                      res.cookie("refresh_token",refreshToken,{maxAge: 60*60*60*1000, httpOnly:true,secure:true,sameSite:"none"})
+                      res.cookie("access_token",accessToken,{maxAge: 60*60*60*1000, httpOnly:true,secure:false,sameSite:"lax"})
+                      res.cookie("refresh_token",refreshToken,{maxAge: 60*60*60*1000, httpOnly:true,secure:false,sameSite:"lax"})
                       res.status(200).json({authorized:true})
            }else{
            
@@ -142,6 +142,28 @@ router.post('/withgoogle', async (req,res)=>{
         res.status(500).send("server error" + error)
      }
 })
+router.get('/postreviewuser/:productId',validateUser,async(req,res)=>{
+  const productId = req.params.productId
+  const foundUser = req.foundUser
+  const rating = req.query.rating
+  const comment = req.query.comment
+  if(!rating || !comment || !productId) return res.status(400).send("rating and comment are required")
+  try{
+    const newReview = await Review.create({
+       userId:foundUser._id,
+       productId:productId,
+       rating:rating,
+       comment:comment
+    })
+  if(!newReview) return res.status(400).send("review not created")
+  res.status(200).json(newReview)
+  
+  }catch(error){
+    console.log(error)
+    return res.status(500).send("server error" + error)
+  }
+})
+
 
 router.get('/userinfo',validateUser, async (req,res)=>{
   const name = req.userName
